@@ -1,0 +1,131 @@
+.App {
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+}
+
+.App-header {
+  min-height: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.MainTitle {
+  font-family: "Roboto";
+  font-weight: 100;
+  letter-spacing: 8vw;
+  font-size: 2rem;
+  padding-left: 8vw;
+  line-height: 6vh;
+}
+
+hr {
+  height: 1px;
+  background-color: black;
+  width: 80vw;
+  
+}
+
+.MenuContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.MenuElement {
+  padding: 5px 5vw;
+  margin: 0px;
+  font-size: 1.1rem;
+}
+.Web3Button {
+  border-radius: 0px;
+  border-width: 0px;
+  box-shadow: 5px 5px;
+  background-color: rgb(255, 182, 182);
+  padding: 0px 1vw;
+
+}
+
+
+.MenuActive {
+  font-weight: 900;
+}
+
+.ContentContainer {
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 1px;
+  width: 80vw;
+  height: 60vh;
+  margin: 5vh;
+  box-shadow: 10px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ExContainer {
+  border-radius: 20px;
+  border-style: solid;
+  border-width: 1px;
+  width: 95%;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  margin: 10px;
+  
+
+}
+.ExRate {
+  padding: 0px;
+  margin: 0px;
+  font-size: 1rem;
+}
+.ConvContainer {
+  width: 95%;
+  height: 60%;
+  border-radius: 10px;
+  align-self: center;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.BTCContainer {
+  width: 20%;
+  height: 90%;
+  border-style: solid;
+  border-width: 1px;
+  align-self: center;
+  border-radius: 10px;
+  margin: 0px;
+  background-color: white;
+}
+.EnergyContainer {
+  width: 20%;
+  height: 90%;
+  border-style: solid;
+  border-width: 1px;
+  align-self: center;
+  border-radius: 10px;
+  margin: 0px;
+  background-color: white;
+}
+
+.PtableContainer {
+  width: 50%;
+  height: 90%;
+  border-style: solid;
+  border-width: 1px;
+  align-self: center;
+  border-radius: 10px;
+  margin: 0px;
+  background-color: white;
+}
+
+input {
+  width: 80%;
+}
