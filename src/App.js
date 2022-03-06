@@ -1,7 +1,10 @@
 import './App.css';
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import "@fontsource/roboto/100.css";
 import "@fontsource/roboto/900.css";
+import { Canvas, useFrame } from '@react-three/fiber'
+import MyModel from "./ptable.js";
+import { OrbitControls, MapControls } from '@react-three/drei';
 
 function HomeScreen() {
   return (
@@ -12,21 +15,87 @@ function HomeScreen() {
     
   )
 }
+
+
 function TransmuteScreen() {
+  const [Element, setElement] = useState(0);
+  const [ElemName, setElemName] = useState("None");
+
+  useEffect(() => {
+    switch (Element) {
+      case 0:
+        console.log("First Run");
+        break;
+      case 1:
+        setElemName("H");
+        break;
+      case 2:
+        setElemName("He");
+        break;
+      case 3:
+        setElemName("Li");
+        break;
+      case 4:
+        setElemName("Be");
+        break;
+      case 5:
+        setElemName("B");
+        break;
+      case 6:
+        setElemName("C");
+        break;
+      case 7:
+        setElemName("N");
+        break;
+      case 8:
+        setElemName("O");
+        break;
+      default:
+        break;
+    }
+  }, [Element]);
+
+
   return (
     <div className='HomeContainer ContentContainer'>
       <div className='ExContainer'><p className='ExRate'>1 BTC = 5.148e+17J = 5.72792kg</p></div>
-      <p>Transmute between Bitcoin, energy and mass</p>
+
       <div className='ConvContainer'>
         <div className='BTCContainer'>
-          <h3>BTC</h3>
-          <input></input>
+        <div className='EnergySymbol'>
+            <h3 className='BTCSymbol'>wBTC</h3>
+          </div>
+          <div className='EnergyInputContainer'>
+            <p className='MassText'>wBTC:</p>
+            <input className='PtableInput'></input>
+            <button className='EnergyMint'>Mint</button>
+          </div>
           </div>
         <div className='EnergyContainer'>
-          <h3>Energy</h3>
-          <input></input>
+          <div className='EnergySymbol'>
+            <h3 className='PlugSymbol'>🔌</h3>
+          </div>
+          <div className='EnergyInputContainer'>
+            <p className='MassText'>Energy:</p>
+            <input className='PtableInput'></input>
+            <button className='EnergyMint'>Mint</button>
+          </div>
         </div>
-        <div className='PtableContainer'><h3>Mass</h3></div>
+        <div className='PtableContainer'>
+          <Canvas className='PtableCanvas' camera={{ position: [0, 40, 0],  near: 0, far: 100 ,zoom: 4}} orthographic>
+            <pointLight position={[-10, 4, -20]} intensity={10} />
+            <MyModel rotation={[0,0,0]} setElement={(res) => {setElement(res); console.log(res)}} ></MyModel>
+            <MapControls></MapControls>
+          </Canvas>
+          
+          <div className='PtableInputContainer'>
+            <p className='MassText'>Mass:</p>
+            <input className='PtableInput'></input>
+            <p className='ElementDisplay'>{ElemName}</p>
+            <button className='PtableMint'>Mint</button>
+          </div>
+          
+        </div>
       </div>
 
 

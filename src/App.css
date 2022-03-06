@@ -26,6 +26,7 @@
 hr {
   height: 1px;
   background-color: black;
+  border: none;
   width: 80vw;
   
 }
@@ -68,14 +69,15 @@ hr {
 }
 
 .ExContainer {
-  border-radius: 20px;
+  border-radius: 0px;
   border-style: solid;
   border-width: 1px;
   width: 95%;
   align-items: center;
   justify-content: center;
   align-self: center;
-  margin: 10px;
+  margin: 15px 0px 0px 0px;
+  padding: 5px 0px;
   
 
 }
@@ -86,13 +88,13 @@ hr {
 }
 .ConvContainer {
   width: 95%;
-  height: 60%;
+  height: 85%;
   border-radius: 10px;
   align-self: center;
-  background-color: black;
+
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .BTCContainer {
   width: 20%;
@@ -103,6 +105,7 @@ hr {
   border-radius: 10px;
   margin: 0px;
   background-color: white;
+  box-shadow: 0px 0px 20px -10px;
 }
 .EnergyContainer {
   width: 20%;
@@ -113,6 +116,44 @@ hr {
   border-radius: 10px;
   margin: 0px;
   background-color: white;
+  box-shadow: 0px 0px 20px -10px;
+}
+.EnergySymbol {
+  height: 87%;
+  margin: 0px;
+  max-width: 95%;
+  display: flex;
+  justify-content: center;
+}
+.PlugSymbol {
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  justify-self: center;
+  font-size: 300%;
+  font-family: emoji, "Roboto";
+}
+.BTCSymbol {
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  justify-self: center;
+  font-size: 200%;
+  font-family: emoji, "Roboto";
+}
+
+.EnergyInputContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 10%;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 10%;
+}
+.EnergyMint {
+  padding: 5px 5%;
+  margin: 0px 2%;
 }
 
 .PtableContainer {
@@ -124,8 +165,40 @@ hr {
   border-radius: 10px;
   margin: 0px;
   background-color: white;
+  box-shadow: 0px 0px 20px -10px;
 }
 
-input {
-  width: 80%;
+.PtableCanvas {
+  max-height: 80%;
+  margin: 10px;
+  max-width: 95%;
+}
+
+.PtableInputContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 10%;
+  align-items: center;
+  justify-content: space-evenly;
+  max-height: 10%;
+  flex-basis: 10px;
+  
+}
+.PtableInput {
+  width: 50%;
+  padding: 5px;
+}
+.ElementDisplay {
+  border-style: groove;
+  border-radius: 0px;
+  padding: 0px 5px;
+  margin: 0px 5px;
+}
+.PtableMint {
+  padding: 5px 5%;
+  margin: 0px 5%;
+}
+.MassText {
+  margin: 0px 10px;
 }
