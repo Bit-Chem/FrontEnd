@@ -1,10 +1,10 @@
 import './App.css';
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import "@fontsource/roboto/100.css";
 import "@fontsource/roboto/900.css";
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas } from '@react-three/fiber'
 import MyModel from "./ptable.js";
-import { OrbitControls, MapControls } from '@react-three/drei';
+import {MapControls } from '@react-three/drei';
 
 function HomeScreen() {
   return (
