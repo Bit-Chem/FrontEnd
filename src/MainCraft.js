@@ -1,4 +1,4 @@
-import React /*{ Suspense, useRef, useEffect }*/ from "react";
+import React, {useState, useEffect} /*{ Suspense, useRef, useEffect }*/ from "react";
 /*import { useGLTF, Image, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from 'three';*/
@@ -12,9 +12,27 @@ const unityContext = new UnityContext({
 });
 
 export default function MainCraft(props) {
-  
+  const [progression, setProgression] = useState(0);
+  const [progressionStyle, setProgressionStyle] = useState("");
+
+  useEffect(function () {
+    unityContext.on("progress", function (progression) {
+      setProgression(progression);
+      console.log(progression)
+      if (progression === 1) {
+        setProgressionStyle("hiddenStyle")
+        console.log(progression)
+      }
+    });
+  }, []);
+
   return (
-    <Unity unityContext={unityContext} className="UnityObject"/>
+    <div>
+      <p className={progressionStyle}>Loading {progression * 100} percent...</p>
+      <div>
+        <Unity unityContext={unityContext} className="UnityObject"/>
+      </div>
+    </div>
   );
 }
 
