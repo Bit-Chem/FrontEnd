@@ -1,21 +1,18 @@
 import './App.css';
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect /*useRef*/ } from 'react'
 import "@fontsource/roboto/100.css";
 import "@fontsource/roboto/900.css";
-import { Canvas, useFrame} from '@react-three/fiber'
+import { Canvas, /*useFrame*/} from '@react-three/fiber'
 import MyModel from "./ptable.js";
-import {MapControls, Image } from '@react-three/drei';
+import {MapControls } from '@react-three/drei';
 
-import Web3Modal, { Provider } from '@0xsequence/web3modal'
+import Web3Modal, { /*Provider*/ } from '@0xsequence/web3modal'
 import { ethers } from 'ethers'
 import { sequence } from '0xsequence'
 import WalletConnect from '@walletconnect/web3-provider'
 
 
-import { StandaloneStructService } from 'ketcher-standalone'
-import {Editor} from 'ketcher-react'
 
-import Viewer from 'miew-react'
 import MainCraft from './MainCraft';
 
 function HomeScreen() {
@@ -166,11 +163,12 @@ function Menu(props) {
       setWeb3Styling('MenuElement Web3Button-Disconnected')
     }
   }, [MyProvider])
-  useEffect(() => {
+  
+  /*useEffect(() => {
     if (web3Modal.cachedProvider) {
       connectWallet()
     }
-  }, [])
+  }, [])*/
 
   const connectWeb3Modal = async () => {
     if (web3Modal.cachedProvider) {
