@@ -5,10 +5,10 @@ import * as THREE from 'three';*/
 import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
-  loaderUrl: "build/TestBuild.loader.js",
-  dataUrl: "build/TestBuild.data.gz",
-  frameworkUrl: "build/TestBuild.framework.js.gz",
-  codeUrl: "build/TestBuild.wasm.gz",
+  loaderUrl: "NewBuild5/Build/NewBuild5.loader.js",
+  dataUrl: "NewBuild5/Build/NewBuild5.data",
+  frameworkUrl: "NewBuild5/Build/NewBuild5.framework.js",
+  codeUrl: "NewBuild5/Build/NewBuild5.wasm",
 });
 
 export default function MainCraft(props) {
