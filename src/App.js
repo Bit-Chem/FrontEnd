@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect /*useRef*/ } from 'react'
+import React, { useState, useEffect, /*useRef*/} from 'react'
 import "@fontsource/roboto/100.css";
 import "@fontsource/roboto/900.css";
 import { Canvas, /*useFrame*/} from '@react-three/fiber'
@@ -10,6 +10,7 @@ import Web3Modal, { /*Provider*/ } from '@0xsequence/web3modal'
 import { ethers } from 'ethers'
 import { sequence } from '0xsequence'
 import WalletConnect from '@walletconnect/web3-provider'
+import ABI from "./ABIv1.json";
 
 
 
@@ -25,9 +26,81 @@ function HomeScreen() {
   )
 }
 
-function TransmuteScreen() {
+function TransmuteScreen(props) {
   const [Element, setElement] = useState(0);
   const [ElemName, setElemName] = useState("None");
+
+  const [BTCinput, setBTCinput] = useState(0);
+  const [Jinput, setJinput] = useState(0);
+  const [MOLinput, setMOLinput] = useState(0);
+  
+
+
+  const [lastinput, setlastinput] = useState("")
+
+  function onChange(e) {
+    console.log(e);
+    if (e.target.name === "BTCinput") {
+      setBTCinput(e.target.value);
+      setlastinput("BTCinput")
+    }
+    else if (e.target.name === "Jinput") {
+      setJinput(e.target.value)
+      setlastinput("Jinput")
+    }
+    else if (e.target.name === "MOLinput") {
+      if (Element === 0) {
+        setElement(1);
+      }
+
+      setMOLinput(e.target.value)
+      setlastinput("MOLinput")
+    }
+  }
+  function onMint(e) {
+    if (props.MyProvider != null) {
+      console.log(e);
+      if (e.target.name === "ElementMint") {
+        //address can change
+        const address = "0x80aC040E4A430d51c66d307d29Db64C9C47a1634";
+        const abi = ABI;
+        const signerOrProvider = props.MyProvider.getSigner();
+
+        console.log("Minting: " + ElemName);
+        const ThisContract = new ethers.Contract( address , abi , signerOrProvider );
+        console.log(ThisContract);
+        const fnmint = "mint" + ElemName
+        const contrstats = ThisContract[fnmint](Math.floor(MOLinput*(10**10)));
+        console.log(contrstats)
+      }
+    
+      else if (e.target.name === "BTCMint") {
+        alert("Reverse mints Not yet implemented")
+      }
+    } else {alert("Please connect Wallet!")}
+
+  }
+  useEffect(() => {
+    const MolarMasses = {1: 1.0079, 2: 4.0026, 3: 6.941, 4: 9.0122, 5: 10.811, 6: 12.011, 7: 14.007, 8: 16};
+    if (lastinput === "BTCinput") {
+      setJinput(BTCinput * 5.148e+11)
+      if (Element === 0) {
+        setElement(1);
+      }
+      setMOLinput(((Jinput/(299792458**2)*(10**3)))/MolarMasses[Element])
+    }
+    else if (lastinput === "Jinput") {
+      setBTCinput(Jinput / 5.148e+11 )
+      if (Element === 0) {
+        setElement(1);
+      }
+      setMOLinput(((Jinput/(299792458**2))*(10**3))/MolarMasses[Element])
+    }
+    else if (lastinput === "MOLinput") {
+      setJinput(((MOLinput * MolarMasses[Element])/(10**3))*(299792458**2));
+      setBTCinput(Jinput / 5.148e+11 )
+    }
+  }, [BTCinput, Jinput, MOLinput, Element, lastinput])
 
   useEffect(() => {
     switch (Element) {
@@ -35,16 +108,16 @@ function TransmuteScreen() {
         console.log("First Run");
         break;
       case 1:
-        setElemName("H");
+        setElemName("Hydrogen");
         break;
       case 2:
-        setElemName("He");
+        setElemName("Helium");
         break;
       case 3:
-        setElemName("Li");
+        setElemName("Lithium");
         break;
       case 4:
-        setElemName("Be");
+        setElemName("Beryllium");
         break;
       case 5:
         setElemName("B");
@@ -56,7 +129,7 @@ function TransmuteScreen() {
         setElemName("N");
         break;
       case 8:
-        setElemName("O");
+        setElemName("Oxygen");
         break;
       default:
         break;
@@ -66,7 +139,7 @@ function TransmuteScreen() {
 
   return (
     <div className='HomeContainer ContentContainer'>
-      <div className='ExContainer'><p className='ExRate'>1 BTC = 5.148e+17J = 5.72792kg</p></div>
+      <div className='ExContainer'><p className='ExRate'>1 BTC = 5.148e+11J = 5.727mg</p></div>
 
       <div className='ConvContainer'>
         <div className='BTCContainer'>
@@ -75,8 +148,8 @@ function TransmuteScreen() {
           </div>
           <div className='EnergyInputContainer'>
             <p className='MassText'>wBTC:</p>
-            <input className='PtableInput'></input>
-            <button className='EnergyMint'>Mint</button>
+            <input name="BTCinput" className='PtableInput' onChange={(e) => onChange(e)} value={BTCinput}></input>
+            <button name="BTCMint" className='EnergyMint' onClick={(e) => onMint(e)}>Mint</button>
           </div>
           </div>
         <div className='EnergyContainer'>
@@ -85,8 +158,8 @@ function TransmuteScreen() {
           </div>
           <div className='EnergyInputContainer'>
             <p className='MassText'>Energy:</p>
-            <input className='PtableInput'></input>
-            <button className='EnergyMint'>Mint</button>
+            <input name="Jinput" className='PtableInput' onChange={(e) => onChange(e)} value={Jinput}></input>
+            {/*<button className='EnergyMint'>Mint</button>*/}
           </div>
         </div>
         <div className='PtableContainer'>
@@ -98,9 +171,9 @@ function TransmuteScreen() {
           
           <div className='PtableInputContainer'>
             <p className='MassText'>Mass:</p>
-            <input className='PtableInput'></input>
+            <input name="MOLinput" className='PtableInput' onChange={(e) => onChange(e)} value={MOLinput}></input>
             <p className='ElementDisplay'>{ElemName}</p>
-            <button className='PtableMint'>Mint</button>
+            <button name="ElementMint" className='PtableMint' onClick={(e) => onMint(e)}>Mint</button>
           </div>
           
         </div>
@@ -110,10 +183,10 @@ function TransmuteScreen() {
     </div>
   )
 }
-function CraftScreen() {
+function CraftScreen(props) {
   return (
     <div className='CraftContainer ContentContainer'>
-        <MainCraft></MainCraft>
+        <MainCraft MyProvider={props.MyProvider}></MainCraft>
     </div>
     
   )
@@ -124,7 +197,10 @@ let providerOptions = {
   walletconnect: {
     package: WalletConnect,
     options: {
-      infuraId: 'xxx-your-infura-id-here'
+      rpc: {
+        1: "	https://rpc.ankr.com/eth",
+        80001: "https://rpc-mumbai.matic.today"
+      },
     }
   }
 }
@@ -136,7 +212,7 @@ if (!window?.ethereum?.isSequence) {
       package: sequence,
       options: {
         appName: 'BitChem',
-        defaultNetwork: 'ethereum'
+        defaultNetwork: 'mumbai'
       }
     }
   }
@@ -149,26 +225,40 @@ function Menu(props) {
     providerOptions,
     cacheProvider: true
   })
-  const [MyProvider, setProvider] = useState(null);
+  //const [MyProvider, setProvider] = useState(null);
   const [ProviderName, setProviderName] = useState("none");
-  const [Web3Styling, setWeb3Styling]= useState('MenuElement Web3Button-Disconnected')
+  const [Web3Styling, setWeb3Styling]= useState('Web3Button Web3Button-Disconnected')
+  const [isShownHoverContent, setIsShownHoverContent] = useState(false);
 
   useEffect(() => {
-    if (MyProvider !== null) {
-      setProviderName(MyProvider.connection.url)
-      setWeb3Styling('MenuElement Web3Button-Connected')
-    }
-    else if (MyProvider == null) {
+    if (props.MyProvider == null) {
       setProviderName("none");
-      setWeb3Styling('MenuElement Web3Button-Disconnected')
+      setWeb3Styling('Web3Button Web3Button-Disconnected')
     }
-  }, [MyProvider])
+    else if ((props.MyProvider !== null) && (async () => await props.MyProvider.getNetwork() === 80001 ) ) {
+      if (props.MyProvider.connection.url === "unknown:"){
+        setProviderName("Sequence")
+        setWeb3Styling('Web3Button Web3Button-Connected')
+      }
+      else {
+      setProviderName(props.MyProvider.connection.url)
+      setWeb3Styling('Web3Button Web3Button-Connected')
+
+      }
+    
+    }
+    else if ((props.MyProvider != null) && (async () => await props.MyProvider.getNetwork() !== 80001 ) ) {
+      setProviderName("Wrong Chain")
+      setWeb3Styling('Web3Button Web3Button-Disconnected')
+    }
+
+  }, [props.MyProvider])
   
-  /*useEffect(() => {
+  useEffect(() => {
     if (web3Modal.cachedProvider) {
       connectWallet()
     }
-  }, [])*/
+  }, [web3Modal.cachedProvider]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const connectWeb3Modal = async () => {
     if (web3Modal.cachedProvider) {
@@ -180,13 +270,36 @@ function Menu(props) {
     console.log("Should be connecting here")
     const wallet = await web3Modal.connect()
     
-    const provider = new ethers.providers.Web3Provider(wallet)
+    
+    const provider = new ethers.providers.Web3Provider(wallet, "any");
+    const TheNetwork = await provider.getNetwork();
+    console.log(TheNetwork.chainId)
+    if (TheNetwork.chainId !== 80001) {
+      window.alert("please switch network to polygon testnet (mumbai)")
+      console.log("DANGER")
+      window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [{
+            chainId: "0x13881",
+            rpcUrls: ["https://rpc-mumbai.matic.today", "https://matic-mumbai.chainstacklabs.com"],
+            chainName: "Polygon Testnet (Mumbai)",
+            nativeCurrency: {
+                name: "MATIC",
+                symbol: "MATIC",
+                decimals: 18
+            },
+            blockExplorerUrls: ["https://mumbai.polygonscan.com/"]
+        }]
+    });
+    
+    }
     console.log(provider);
     if (wallet.sequence) {
       provider.sequence = wallet.sequence
     }
 
-    setProvider(provider);
+    //setProvider(provider);
+    props.setProvider(provider)
   }
   return(
     <div className='MenuContainer'>
@@ -206,7 +319,24 @@ function Menu(props) {
       className={props.active === "Gov" ? "MenuActive MenuElement": 'MenuElement'}
       onClick={(r) => props.setactive(r.target.innerText)}
       >Gov</p>
-      <button onClick={(r) => connectWeb3Modal()} className={Web3Styling}>Connected to {ProviderName} </button>
+      <div className="MenuElement ButtonMenu">
+        <button 
+           
+          onClick={(r) => connectWeb3Modal()} 
+          className={Web3Styling}>
+            Connected to {ProviderName} 
+        </button>
+        <div 
+        style={{padding: "5px"}}
+        onMouseEnter={() => setIsShownHoverContent(true)}
+        onMouseLeave={() => setIsShownHoverContent(false)}>
+        ▼
+        </div>
+        <div className={isShownHoverContent ? "HoverDropdown" : "hiddenStyle HoverDropdown"}>
+          
+        </div>
+      </div>
+      
     </div>
   )
 }
@@ -214,17 +344,24 @@ function Menu(props) {
 function App() {
   const [active, setactive] = useState("Home");
 
+  const [MyProvider, setProvider] = useState(null);
+
+
 
   return (
     <div className="App">
       <header className="App-header">
         <h1 className='MainTitle'>BIT CHEM</h1>
         <hr></hr>
-        <Menu active={active} setactive={(res) => setactive(res)}></Menu>
+        <Menu 
+          active={active} 
+          setactive={(res) => setactive(res)}
+          MyProvider={MyProvider}
+          setProvider={(res) => setProvider(res)}></Menu>
         <hr></hr>
         {active === "Home" ? <HomeScreen></HomeScreen> : null}
-        {active === "Transmute" ? <TransmuteScreen></TransmuteScreen> : null}
-        {active === "Craft" ? <CraftScreen></CraftScreen> : null}
+        {active === "Transmute" ? <TransmuteScreen MyProvider={MyProvider}></TransmuteScreen> : null}
+        {active === "Craft" ? <CraftScreen MyProvider={MyProvider}></CraftScreen> : null}
       </header>
     </div>
   );
