@@ -12,9 +12,77 @@ import { sequence } from '0xsequence'
 import WalletConnect from '@walletconnect/web3-provider'
 import ABI from "./ABIv1.json";
 
-
-
 import MainCraft from './MainCraft';
+
+function ShowBalances(props) {
+
+  console.log(props.MyBalances);
+
+  function SwitchBalances(ElemNum) {
+    var returnvalue = "N/A";
+    switch (ElemNum) {
+      case 0:
+        console.log("First Run");
+        break;
+      case 1:
+        returnvalue = ("Hydrogen");
+        break;
+      case 2:
+        returnvalue = ("Helium");
+        break;
+      case 3:
+        returnvalue = ("Lithium");
+        break;
+      case 4:
+        returnvalue = ("Beryllium");
+        break;
+      case 5:
+        returnvalue = ("B");
+        break;
+      case 6:
+        returnvalue = ("C");
+        break;
+      case 7:
+        returnvalue = ("N");
+        break;
+      case 8:
+        returnvalue = ("Oxygen");
+        break;
+      case 200:
+        returnvalue = ("Water");
+        break;
+      default:
+        break;
+    }
+    return returnvalue
+  }
+  return (
+    <div>
+      <div style={{height: "3vh"}}></div>
+      {Object.keys(props.MyBalances).map((value, i) => {
+        //console.log("key: " + value);
+        //console.log("val: " + props.MyBalances[value])
+        
+        if (props.MyBalances[value] > 0) {
+          return (
+            <div key={i}>
+              <div className="DropDownContainer">
+                <p style={{margin: "0px"}}>{SwitchBalances(parseInt(value))}</p>
+                <p style={{margin: "0px"}}>{props.MyBalances[value]}</p>
+                <p style={{margin: "0px"}}>mol</p>
+              </div>
+              <hr />
+          </div>
+          )
+        } else return null
+      })
+      }
+      
+      
+    </div>
+  )
+}
+
 
 function HomeScreen() {
   return (
@@ -271,6 +339,7 @@ function Menu(props) {
     const wallet = await web3Modal.connect()
     
     
+    
     const provider = new ethers.providers.Web3Provider(wallet, "any");
     const TheNetwork = await provider.getNetwork();
     console.log(TheNetwork.chainId)
@@ -297,9 +366,28 @@ function Menu(props) {
     if (wallet.sequence) {
       provider.sequence = wallet.sequence
     }
+    props.setProvider(provider);
 
-    //setProvider(provider);
-    props.setProvider(provider)
+    const address = "0x80aC040E4A430d51c66d307d29Db64C9C47a1634";
+    const abi = ABI;
+    const signerOrProvider = await provider.getSigner();
+    console.log("updating balances");
+    const ThisContract = new ethers.Contract( address , abi , signerOrProvider );
+    console.log(ThisContract);
+    
+    const accounts = new Array(10).fill(wallet.selectedAddress); 
+    console.log(accounts)
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 200, 201]
+    const TheseBalances = await ThisContract.balanceOfBatch(accounts, ids)
+    var TempBalanceObj = {};
+    TheseBalances.map((v, i) => {
+      const elemnum = ids[i];
+      TempBalanceObj[elemnum] = ((parseFloat(v.toNumber()) / 10**10)).toExponential(2)
+      return null
+    })
+    console.log(TempBalanceObj);
+    console.log(props)
+    await props.setMyBalances(TempBalanceObj)
   }
   return(
     <div className='MenuContainer'>
@@ -333,7 +421,7 @@ function Menu(props) {
         ▼
         </div>
         <div className={isShownHoverContent ? "HoverDropdown" : "hiddenStyle HoverDropdown"}>
-          
+          <ShowBalances MyBalances={props.MyBalances}/>
         </div>
       </div>
       
@@ -345,7 +433,9 @@ function App() {
   const [active, setactive] = useState("Home");
 
   const [MyProvider, setProvider] = useState(null);
-
+  const [MyBalances, setMyBalances] = useState({1: 0});
+  console.log(MyBalances);
+  
 
 
   return (
@@ -357,7 +447,12 @@ function App() {
           active={active} 
           setactive={(res) => setactive(res)}
           MyProvider={MyProvider}
-          setProvider={(res) => setProvider(res)}></Menu>
+          setProvider={(res) => setProvider(res)}
+          MyBalances={MyBalances}
+          setMyBalances={(res) => setMyBalances(res)}
+          ></Menu>
+          
+          
         <hr></hr>
         {active === "Home" ? <HomeScreen></HomeScreen> : null}
         {active === "Transmute" ? <TransmuteScreen MyProvider={MyProvider}></TransmuteScreen> : null}
