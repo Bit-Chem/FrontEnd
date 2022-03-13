@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\Documents\\Blockchain_Practice\\frontend-2\\contracts\\Chem.sol": {
-      "lastModificationDate": 1647135528580,
-      "contentHash": "23bca63e006ac699a1bdbde23646e95f",
+      "lastModificationDate": 1647158706872,
+      "contentHash": "cb3ca8df9de707f361cc1b411d1b61e2",
       "sourceName": "contracts/Chem.sol",
       "solcConfig": {
         "version": "0.8.7",
