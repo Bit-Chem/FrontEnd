@@ -49,6 +49,10 @@ hr {
   background-color: rgb(182, 255, 182);
 
 }
+.Web3Button-WrongNetwork {
+  background-color: rgb(255, 6, 6);
+
+}
 .Web3Button {
   border-radius: 20px 0px 0px 20px;
   border-width: 0px;
@@ -236,7 +240,7 @@ hr {
   width: 15vw;
   min-height: 30vh;
   border-radius: 10px;
-  top: 16vh;
+  top: 180px;
   z-index: -1;
 }
 .ButtonMenu {

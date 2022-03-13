@@ -8,10 +8,10 @@ import ABI from "./ABIv1.json";
 
 
 const unityContext = new UnityContext({
-  loaderUrl: "NewBuild10/Build/NewBuild10.loader.js",
-  dataUrl: "NewBuild10/Build/NewBuild10.data",
-  frameworkUrl: "NewBuild10/Build/NewBuild10.framework.js",
-  codeUrl: "NewBuild10/Build/NewBuild10.wasm",
+  loaderUrl: "NewBuild12/Build/NewBuild12.loader.js",
+  dataUrl: "NewBuild12/Build/NewBuild12.data",
+  frameworkUrl: "NewBuild12/Build/NewBuild12.framework.js",
+  codeUrl: "NewBuild12/Build/NewBuild12.wasm",
 });
 
 export default function MainCraft(props) {

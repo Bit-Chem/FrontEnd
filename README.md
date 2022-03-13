@@ -1,3 +1,24 @@
+# Welcome to Bit=Chem
+
+Bitchem aims to be a cross between an educational tool, a chemical simulator and a blockchain game.
+
+Get Started by connecting your wallet - matamask and sequence wallet supported (make sure to switch to testnet mode - contracts deployed to mumbai).
+Then you may go to the Transmute section to mint psysically acurate chemical elements, the first 8 are currently supported. 
+Once you have at least some Hydrogen and Oxygen, you may go to the Craft screen to react them into water. Currently only reaction
+between Oxygen + Hydrogen, and water + Lithium are supported.
+
+Minting elements aims to be physically accurate by using E = mc^2, where E is directly correlated to the amount of energy it takes to mine 1 bitcoin. 
+Thus in effect, bitcoin can be directly exchanged to tokens that represent the energy if the conversion was 100% efficent. These elements 
+can be combined into infinity many elements. They can also act as primitives for other blockchain games that require physically accurate elements. 
+In the future, gov can be implemented to add more elements and reactions.
+
+
+Currently, minting elements do not require wBTC to transmute to reduce complications on testnet.
+
+
+
+Use the frontend or build yourself below:
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
