@@ -2,6 +2,8 @@ import './App.css';
 import React, { useState /*useRef*/} from 'react'
 import "@fontsource/roboto/100.css";
 import "@fontsource/roboto/900.css";
+import ABI from "./ABIv1.json";
+import { ethers } from 'ethers'
 
 
 
@@ -44,7 +46,7 @@ function HomeScreen() {
 function CraftScreen(props) {
   return (
     <div className='CraftContainer ContentContainer'>
-        <MainCraft MyProvider={props.MyProvider}></MainCraft>
+        <MainCraft MyProvider={props.MyProvider} CheckSetBalances={() => props.CheckSetBalances()}></MainCraft>
     </div>
     
   )
@@ -57,6 +59,38 @@ function App() {
   const [MyProvider, setProvider] = useState(null);
   const [MyBalances, setMyBalances] = useState({1: 0});
   console.log(MyBalances);
+
+  async function CheckSetBalances() {
+    var provider = MyProvider;
+    const address = "0x0E6a83d634A8d34E61a4A2436b8a63df05805Fe4";
+    const abi = ABI;
+    let isSequence = false;
+    console.log(provider)
+
+    if (provider.connection.url === "unknown:"){
+      provider = provider.sequence;
+      isSequence = true;
+    }
+    
+    const signerOrProvider = await provider.getSigner();
+    console.log("updating balances");
+    const ThisContract = new ethers.Contract( address , abi , signerOrProvider );
+    //console.log(ThisContract);
+    
+    const accounts = new Array(10).fill(isSequence ? provider.session.accountAddress : provider.provider.selectedAddress); 
+    console.log(accounts)
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 200, 201]
+    const TheseBalances = await ThisContract.balanceOfBatch(accounts, ids);
+    console.log(TheseBalances)
+    var TempBalanceObj = {};
+    TheseBalances.map((v, i) => {
+        const elemnum = ids[i];
+        TempBalanceObj[elemnum] = ((parseFloat(v.toNumber()) / 10**10)).toExponential(2)
+        return null
+    })
+    console.log(TempBalanceObj);
+    setMyBalances(TempBalanceObj)
+  }
   
   
 
@@ -73,13 +107,14 @@ function App() {
           setProvider={(res) => setProvider(res)}
           MyBalances={MyBalances}
           setMyBalances={(res) => setMyBalances(res)}
+          CheckSetBalances={() => CheckSetBalances()}
           ></Menu>
           
           
         <hr></hr>
         {active === "Home" ? <HomeScreen></HomeScreen> : null}
-        {active === "Transmute" ? <TransmuteScreen MyProvider={MyProvider}></TransmuteScreen> : null}
-        {active === "Craft" ? <CraftScreen MyProvider={MyProvider}></CraftScreen> : null}
+        {active === "Transmute" ? <TransmuteScreen MyProvider={MyProvider} CheckSetBalances={() => CheckSetBalances()}></TransmuteScreen> : null}
+        {active === "Craft" ? <CraftScreen MyProvider={MyProvider} CheckSetBalances={() => CheckSetBalances()}></CraftScreen> : null}
       </header>
     </div>
   );

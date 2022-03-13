@@ -8,38 +8,64 @@ import ABI from "./ABIv1.json";
 
 
 const unityContext = new UnityContext({
-  loaderUrl: "NewBuild12/Build/NewBuild12.loader.js",
-  dataUrl: "NewBuild12/Build/NewBuild12.data",
-  frameworkUrl: "NewBuild12/Build/NewBuild12.framework.js",
-  codeUrl: "NewBuild12/Build/NewBuild12.wasm",
+  loaderUrl: "NewBuild13/Build/NewBuild13.loader.js",
+  dataUrl: "NewBuild13/Build/NewBuild13.data",
+  frameworkUrl: "NewBuild13/Build/NewBuild13.framework.js",
+  codeUrl: "NewBuild13/Build/NewBuild13.wasm",
 });
 
+function sleep(milliseconds) {  
+  return new Promise(resolve => setTimeout(resolve, milliseconds));  
+}  
+
+
 export default function MainCraft(props) {
+
+  
+
   const [progression, setProgression] = useState(0);
   const [progressionStyle, setProgressionStyle] = useState("");
+
+  async function CheckConfirm(TransactionComplete) {
+      const txReceipt = await props.MyProvider.getTransaction(TransactionComplete.hash)
+      sleep(2000).then( () => {
+        console.log(txReceipt)
+        if (txReceipt.confirmations > 0) {
+          props.CheckSetBalances();
+          alert("TX confirmed")
+        }
+        else {CheckConfirm(TransactionComplete)}
+      })
+  }
 
 
   const RXFN = useCallback(async function ReactionTransaction(fncreate, beaker, elem1, elem2) {
     //Edit as nessasary
-    const address = "0x80aC040E4A430d51c66d307d29Db64C9C47a1634";
+    const address = "0x0E6a83d634A8d34E61a4A2436b8a63df05805Fe4";
     const abi = ABI;
-    if (beaker === "cheapBeaker") { beaker = 1000}
-    console.log(beaker)
+    //if (beaker === "cheapBeaker") { beaker = 1000}
+    //console.log(beaker)
     const signerOrProvider = props.MyProvider.getSigner();
-
+    console.log(elem1);
+    console.log(typeof(elem1));
     console.log("Reaction occuring");
 
     const ThisContract = new ethers.Contract( address , abi , signerOrProvider );
     const EXE_TX = ThisContract[fncreate];
     console.log(ThisContract);
     try {
-      await EXE_TX(1000);
+      var TransactionComplete = await EXE_TX(elem1 * 10**10);
+      console.log(TransactionComplete);
+      CheckConfirm(TransactionComplete);
+      
     } catch (error) {
-      alert(error.data.message)
-      console.log(error.data.message)
+      console.log(error)
+      if (error.data != null) {
+        alert(error.data.message)
+      }
     }
     
-  }, [props.MyProvider]);
+  }, [props.MyProvider]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(function () {
     

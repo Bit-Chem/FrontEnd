@@ -6,7 +6,7 @@ import "@fontsource/roboto/900.css";
 import Web3Modal, { /*Provider*/ } from '@0xsequence/web3modal'
 import { ethers } from 'ethers'
 import { sequence } from '0xsequence'
-import ABI from "./ABIv1.json";
+//import ABI from "./ABIv1.json";
 
 function ShowBalances(props) {
 
@@ -31,19 +31,22 @@ function ShowBalances(props) {
           returnvalue = ("Beryllium");
           break;
         case 5:
-          returnvalue = ("B");
+          returnvalue = ("Boron");
           break;
         case 6:
-          returnvalue = ("C");
+          returnvalue = ("Carbon");
           break;
         case 7:
-          returnvalue = ("N");
+          returnvalue = ("Nitrogen");
           break;
         case 8:
           returnvalue = ("Oxygen");
           break;
         case 200:
           returnvalue = ("Water");
+          break;
+        case 201:
+          returnvalue = ("LiOH");
           break;
         default:
           break;
@@ -93,9 +96,7 @@ if (!window?.ethereum?.isSequence) {
     }
   }
 export default function Menu(props) {
-    
-    
-  
+
     const web3Modal = new Web3Modal({
       providerOptions,
       cacheProvider: true
@@ -104,6 +105,8 @@ export default function Menu(props) {
     const [ProviderName, setProviderName] = useState("none");
     const [Web3Styling, setWeb3Styling]= useState('Web3Button Web3Button-Disconnected')
     const [isShownHoverContent, setIsShownHoverContent] = useState(false);
+
+    
   
     //style button
     useEffect(() => {
@@ -159,35 +162,7 @@ export default function Menu(props) {
                     setWeb3Styling('Web3Button Web3Button-WrongNetwork')
                 }
                 else {
-                    const address = "0x80aC040E4A430d51c66d307d29Db64C9C47a1634";
-                    const abi = ABI;
-                    let isSequence = false;
-                    console.log(provider)
-
-                    if (provider.connection.url === "unknown:"){
-                      provider = provider.sequence;
-                      isSequence = true;
-                    }
-                    
-                    const signerOrProvider = await provider.getSigner();
-                    console.log("updating balances");
-                    const ThisContract = new ethers.Contract( address , abi , signerOrProvider );
-                    //console.log(ThisContract);
-                    
-                    const accounts = new Array(10).fill(isSequence ? provider.session.accountAddress : provider.provider.selectedAddress); 
-                    console.log(accounts)
-                    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 200, 201]
-                    const TheseBalances = await ThisContract.balanceOfBatch(accounts, ids);
-                    console.log(TheseBalances)
-                    var TempBalanceObj = {};
-                    TheseBalances.map((v, i) => {
-                        const elemnum = ids[i];
-                        TempBalanceObj[elemnum] = ((parseFloat(v.toNumber()) / 10**10)).toExponential(2)
-                        return null
-                    })
-                    console.log(TempBalanceObj);
-                    console.log(props)
-                    await props.setMyBalances(TempBalanceObj)
+                    props.CheckSetBalances();
                 }
                 
 
@@ -195,7 +170,7 @@ export default function Menu(props) {
             GetNetwork().catch((err) => alert(err));
             
         }
-    }, [props])
+    }, [props.MyProvider]) // eslint-disable-line react-hooks/exhaustive-deps
     
     useEffect(() => {
       if (web3Modal.cachedProvider) {

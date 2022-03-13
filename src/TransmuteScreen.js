@@ -9,6 +9,9 @@ import {MapControls } from '@react-three/drei';
 import { ethers } from 'ethers'
 import ABI from "./ABIv1.json";
 
+function sleep(milliseconds) {  
+  return new Promise(resolve => setTimeout(resolve, milliseconds));  
+}  
 
 export default function TransmuteScreen(props) {
     const [Element, setElement] = useState(0);
@@ -41,21 +44,43 @@ export default function TransmuteScreen(props) {
         setlastinput("MOLinput")
       }
     }
+    async function CheckConfirm(TXpromise) {
+      try {
+        let TransactionComplete = await TXpromise;
+        const txReceipt = await props.MyProvider.getTransaction(TransactionComplete.hash)
+        sleep(5000).then( () => {
+          console.log(txReceipt)
+          if (txReceipt.confirmations > 0) {
+            props.CheckSetBalances();
+            alert("TX confirmed")
+          }
+          else {CheckConfirm(TransactionComplete)}
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
     function onMint(e) {
       if (props.MyProvider != null) {
         console.log(e);
         if (e.target.name === "ElementMint") {
           //address can change
-          const address = "0x80aC040E4A430d51c66d307d29Db64C9C47a1634";
-          const abi = ABI;
-          const signerOrProvider = props.MyProvider.getSigner();
-  
-          console.log("Minting: " + ElemName);
-          const ThisContract = new ethers.Contract( address , abi , signerOrProvider );
-          console.log(ThisContract);
-          const fnmint = "mint" + ElemName
-          const contrstats = ThisContract[fnmint](Math.floor(MOLinput*(10**10)));
-          console.log(contrstats)
+          try {
+            const address = "0x0E6a83d634A8d34E61a4A2436b8a63df05805Fe4";
+            const abi = ABI;
+            const signerOrProvider = props.MyProvider.getSigner();
+    
+            console.log("Minting: " + ElemName);
+            const ThisContract = new ethers.Contract( address , abi , signerOrProvider );
+            console.log(ThisContract);
+            const fnmint = "mint" + ElemName
+            const contrstats = ThisContract[fnmint](Math.floor(MOLinput*(10**10)));
+            console.log(contrstats)
+            CheckConfirm(contrstats)
+          } catch (error) {
+            console.log(error)
+          }
+          
         }
       
         else if (e.target.name === "BTCMint") {
@@ -104,13 +129,13 @@ export default function TransmuteScreen(props) {
           setElemName("Beryllium");
           break;
         case 5:
-          setElemName("B");
+          setElemName("Boron");
           break;
         case 6:
-          setElemName("C");
+          setElemName("Carbon");
           break;
         case 7:
-          setElemName("N");
+          setElemName("Nitrogen");
           break;
         case 8:
           setElemName("Oxygen");
@@ -134,6 +159,7 @@ export default function TransmuteScreen(props) {
               <p className='MassText'>wBTC:</p>
               <input name="BTCinput" className='PtableInput' onChange={(e) => onChange(e)} value={BTCinput}></input>
               <button name="BTCMint" className='EnergyMint' onClick={(e) => onMint(e)}>Mint</button>
+              
             </div>
             </div>
           <div className='EnergyContainer'>
@@ -143,6 +169,7 @@ export default function TransmuteScreen(props) {
             <div className='EnergyInputContainer'>
               <p className='MassText'>Energy:</p>
               <input name="Jinput" className='PtableInput' onChange={(e) => onChange(e)} value={Jinput}></input>
+              <p style={{padding: "5px"}}>J</p>
               {/*<button className='EnergyMint'>Mint</button>*/}
             </div>
           </div>
@@ -154,9 +181,11 @@ export default function TransmuteScreen(props) {
             </Canvas>
             
             <div className='PtableInputContainer'>
-              <p className='MassText'>Mass:</p>
+              <p className='MassText'>Elements:</p>
               <input name="MOLinput" className='PtableInput' onChange={(e) => onChange(e)} value={MOLinput}></input>
+              <p style={{padding: "5px"}}>mol</p>
               <p className='ElementDisplay'>{ElemName}</p>
+              
               <button name="ElementMint" className='PtableMint' onClick={(e) => onMint(e)}>Mint</button>
             </div>
             
